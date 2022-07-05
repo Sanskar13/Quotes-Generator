@@ -1,25 +1,46 @@
-import logo from './logo.svg';
+import React from 'react';
+import axios from 'axios';
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class app extends React.Component{
+
+    state = {
+        advice : ''
+    }
+
+    componentDidMount(){
+        // console.log('Component did mount');
+        this.fetchAdvice();
+    }
+
+    fetchAdvice = () => {
+        // Get request in axios
+        axios.get('https://api.adviceslip.com/advice')
+        .then((response) => {
+            const { advice} = response.data.slip;
+            this.setState({advice:advice});
+            console.log(advice);
+        })
+        .catch((error) => {
+            console.log(error);
+        }); 
+    }
+
+    render() {
+        // Destructuring
+        const {advice} = this.state
+        return (
+            <div className='app'>
+                <div className='card'>
+                    <h1 className='heading'>{advice}</h1>
+                    <button className='btn' onClick={this.fetchAdvice}>
+                        <span>Give me Advice</span>
+                    </button>
+                </div>
+            </div>
+        );
+    }
 }
 
-export default App;
+export default app;
